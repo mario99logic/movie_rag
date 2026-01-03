@@ -6,22 +6,38 @@ Follow these steps to get the RAG Retrieval System up and running:
 
 1. Make sure you're in the project directory:
 
-2. Activate the virtual environment:
+   ```bash
+   cd path_to_project
+   ```
+
+2. Create virtual environment (if not already created):
+
+   ```bash
+   python3 -m venv venv
+   ```
+
+3. Activate the virtual environment:
 
    ```bash
    source venv/bin/activate
    ```
 
-3. Create your `.env` file:
+4. Install dependencies:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+5. Create your `.env` file:
 
    ```bash
    cp .env.example .env
    ```
 
-4. Edit `.env` and add your OpenAI API key:
+6. Edit `.env` and add your OpenAI API key:
 
    ```bash
-   # Use your preferred editor.
+   # Use your preferred editor
    nano .env
    ```
 
@@ -31,7 +47,7 @@ Follow these steps to get the RAG Retrieval System up and running:
    OPENAI_API_KEY=sk-your-actual-api-key-here
    ```
 
-   Retrival parameters can also be set in the `.env` file:
+   Retrieval parameters can also be set in the `.env` file:
 
    ```
    CHUNK_SIZE=500
