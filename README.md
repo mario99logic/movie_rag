@@ -129,10 +129,10 @@ rag/
 - Balances precision and recall
 - Typical RAG systems use 3-5 chunks
 
-**Similarity Threshold**: 0.5 (default, configurable 0.0-1.0)
+**Similarity Threshold**: 0.4 (default, configurable 0.0-1.0)
 
 - Filters out low-quality matches
-- Cosine similarity 0.5+ indicates reasonable semantic similarity
+- Cosine similarity 0.4+ indicates reasonable semantic similarity
 - User can adjust based on query specificity
 
 **Similarity Metric**: Cosine Similarity
@@ -141,6 +141,23 @@ rag/
 - Measures angle between vectors, not magnitude
 - Range: 0-1 (higher is more similar)
 - Invariant to vector magnitude
+
+### Backend Technology Selection
+
+**Choice**: FastAPI - Modern Python framework with automatic request validation (Pydantic), built-in API docs, and better performance than Flask. Less boilerplate code for the same functionality.
+
+### Frontend Technology Selection
+
+**Choice**: Plain HTML/CSS/JavaScript
+
+**Justification:**
+
+1. **Simplicity**: The UI has minimal functionality - a search box, parameter controls, and results display. No complex state management or routing needed.
+2. **Zero Dependencies**: No build tools, no npm packages, no version conflicts. Just open the HTML file and it works.
+3. **No Build Step**: Instant development - edit and refresh. No compilation, bundling, or transpiling required.
+4. **Reduced Complexity**: React would add unnecessary overhead (React, ReactDOM, bundler, babel, etc.) for a single-page interface.
+5. **Better for Assignment**: Fewer dependencies means easier setup for evaluators and lower maintenance burden.
+6. **Performance**: Native JS is faster than framework overhead for simple interactions.
 
 ## Quick Start
 
