@@ -4,12 +4,18 @@ from backend.config import config
 
 
 class EmbeddingService:
-    """Service for generating embeddings using OpenAI API."""
+    """Service for generating embeddings using OpenAI API.
+
+    Uses text-embedding-3-small model for:
+    - High quality semantic embeddings at low cost (~$0.02/1M tokens)
+    - Good balance between performance and cost for small datasets
+    - Assignment requirement: must use OpenAI embeddings
+    """
 
     def __init__(self):
         config.validate()
         self.client = OpenAI(api_key=config.OPENAI_API_KEY)
-        self.model = config.EMBEDDING_MODEL
+        self.model = config.EMBEDDING_MODEL  # text-embedding-3-small.
 
     def create_embedding(self, text: str) -> List[float]:
         """

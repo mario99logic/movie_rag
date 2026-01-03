@@ -85,13 +85,7 @@ rag/
 
 ### Embeddings
 
-**Model**: OpenAI `text-embedding-3-small`
-
-**Reasoning:**
-
-- High quality embeddings at low cost
-- Dimension: 1536 (good balance of quality and performance)
-- Cost: ~$0.02 per 1M tokens (far below $1 budget)
+**Model**: OpenAI `text-embedding-3-small` - High quality embeddings at minimal cost (~$0.02 per 1M tokens, well under $1 budget). Assignment requires OpenAI embeddings, and this model provides the best cost/performance balance.
 
 ### Chunking Strategy
 
