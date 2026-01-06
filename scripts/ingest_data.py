@@ -25,6 +25,11 @@ def chunk_text(text: str, chunk_size: int, overlap: int) -> List[str]:
     Returns:
         List of text chunks
     """
+    if chunk_size <= overlap:
+        raise ValueError(
+            f"chunk_size ({chunk_size}) must be greater than overlap ({overlap})"
+        )
+
     if not text or len(text) == 0:
         return []
 
