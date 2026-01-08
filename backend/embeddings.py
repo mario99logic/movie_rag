@@ -1,4 +1,10 @@
-from openai import OpenAI
+from openai import (
+    OpenAI,
+    APIError,
+    RateLimitError,
+    AuthenticationError,
+    APIConnectionError,
+)
 from typing import List
 from backend.config import config
 
@@ -27,11 +33,25 @@ class EmbeddingService:
         Returns:
             List of floats representing the embedding vector
         """
+        if not text:
+            raise ValueError("Text cannot be empty for embedding creation")
         try:
             response = self.client.embeddings.create(input=text, model=self.model)
             return response.data[0].embedding
+        except AuthenticationError as e:
+            raise AuthenticationError(
+                f"OpenAI authentication failed. Check your API key: {str(e)}"
+            ) from e
+        except RateLimitError as e:
+            raise RateLimitError(f"OpenAI rate limit exceeded: {str(e)}") from e
+        except APIConnectionError as e:
+            raise APIConnectionError(
+                f"Failed to connect to OpenAI API: {str(e)}"
+            ) from e
+        except APIError as e:
+            raise APIError(f"OpenAI API error: {str(e)}") from e
         except Exception as e:
-            raise Exception(f"Error creating embedding: {str(e)}")
+            raise Exception(f"Unexpected error creating embedding: {str(e)}") from e
 
     def create_embeddings(self, texts: List[str]) -> List[List[float]]:
         """
@@ -46,8 +66,20 @@ class EmbeddingService:
         try:
             response = self.client.embeddings.create(input=texts, model=self.model)
             return [item.embedding for item in response.data]
+        except AuthenticationError as e:
+            raise AuthenticationError(
+                f"OpenAI authentication failed. Check your API key: {str(e)}"
+            ) from e
+        except RateLimitError as e:
+            raise RateLimitError(f"OpenAI rate limit exceeded: {str(e)}") from e
+        except APIConnectionError as e:
+            raise APIConnectionError(
+                f"Failed to connect to OpenAI API: {str(e)}"
+            ) from e
+        except APIError as e:
+            raise APIError(f"OpenAI API error: {str(e)}") from e
         except Exception as e:
-            raise Exception(f"Error creating embeddings: {str(e)}")
+            raise Exception(f"Unexpected error creating embeddings: {str(e)}") from e
 
 
 embedding_service = EmbeddingService()
