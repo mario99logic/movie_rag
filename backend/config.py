@@ -26,12 +26,8 @@ class Config:
     # Dataset Configuration.
     DATA_PATH = "./data"
 
-    @classmethod
-    def validate(cls):
+    def validate(self):
         """Validate required configuration"""
-        if not cls.OPENAI_API_KEY:
+        if not self.OPENAI_API_KEY:
             raise ValueError("OPENAI_API_KEY environment variable is required")
         return True
-
-
-config = Config()

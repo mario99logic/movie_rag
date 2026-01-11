@@ -6,7 +6,7 @@ from openai import (
     APIConnectionError,
 )
 from typing import List
-from backend.config import config
+from backend.config import Config
 
 
 class EmbeddingService:
@@ -18,7 +18,7 @@ class EmbeddingService:
     - Assignment requirement: must use OpenAI embeddings
     """
 
-    def __init__(self):
+    def __init__(self, config: Config):
         config.validate()
         self.client = OpenAI(api_key=config.OPENAI_API_KEY)
         self.model = config.EMBEDDING_MODEL  # text-embedding-3-small.
@@ -80,6 +80,3 @@ class EmbeddingService:
             raise APIError(f"OpenAI API error: {str(e)}") from e
         except Exception as e:
             raise Exception(f"Unexpected error creating embeddings: {str(e)}") from e
-
-
-embedding_service = EmbeddingService()

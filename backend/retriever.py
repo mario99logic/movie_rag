@@ -1,12 +1,12 @@
 from typing import List, Dict, Any
-from backend.vectordb import vector_db
-from backend.config import config
+from backend.vectordb import VectorDatabase
+from backend.config import Config
 
 
 class Retriever:
     """Retriever for finding relevant context chunks."""
 
-    def __init__(self):
+    def __init__(self, vector_db: VectorDatabase, config: Config):
         self.vector_db = vector_db
         self.top_k = config.TOP_K
         self.similarity_threshold = config.SIMILARITY_THRESHOLD
@@ -69,6 +69,3 @@ class Retriever:
                     )
 
         return retrieved_chunks
-
-
-retriever = Retriever()

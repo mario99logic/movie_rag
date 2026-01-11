@@ -5,9 +5,23 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
-from backend.retriever import retriever
-from backend.vectordb import vector_db
-from backend.config import config
+from backend.retriever import Retriever
+from backend.vectordb import VectorDatabase
+from backend.config import Config
+from backend.embeddings import EmbeddingService
+
+
+def create_dependencies():
+    """Create and wire up all dependencies."""
+    config = Config()
+    embedding_service = EmbeddingService(config)
+    vector_db = VectorDatabase(config, embedding_service)
+    retriever = Retriever(vector_db, config)
+    return retriever, vector_db, config
+
+
+# Initialize dependencies
+retriever, vector_db, config = create_dependencies()
 
 app = FastAPI(
     title="RAG Retrieval System",

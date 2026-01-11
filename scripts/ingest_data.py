@@ -9,8 +9,9 @@ from typing import List, Dict, Any
 # Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from backend.config import config
-from backend.vectordb import vector_db
+from backend.config import Config
+from backend.vectordb import VectorDatabase
+from backend.embeddings import EmbeddingService
 
 
 def chunk_text(text: str, chunk_size: int, overlap: int) -> List[str]:
@@ -83,12 +84,18 @@ def load_csv_data(file_path: str, text_column: str) -> List[Dict[str, Any]]:
 
 
 def process_and_ingest(
-    documents: List[Dict[str, Any]], chunk_size: int = None, overlap: int = None
+    vector_db: VectorDatabase,
+    config: Config,
+    documents: List[Dict[str, Any]],
+    chunk_size: int = None,
+    overlap: int = None,
 ):
     """
     Process documents into chunks and ingest into vector database
 
     Args:
+        vector_db: VectorDatabase instance
+        config: Config instance
         documents: List of document dictionaries with 'text' and 'metadata' keys
         chunk_size: Chunk size override
         overlap: Overlap size override
@@ -145,11 +152,18 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    # Initialize dependencies
+    config = Config()
+    embedding_service = EmbeddingService(config)
+    vector_db = VectorDatabase(config, embedding_service)
+
     # Load data
     print(f"Loading data from {args.file}...")
     documents = load_csv_data(args.file, args.column)
 
     # Process and ingest
-    process_and_ingest(documents, chunk_size=args.chunk_size, overlap=args.overlap)
+    process_and_ingest(
+        vector_db, config, documents, chunk_size=args.chunk_size, overlap=args.overlap
+    )
 
     print("Ingestion complete!")

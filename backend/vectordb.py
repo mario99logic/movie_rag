@@ -1,14 +1,16 @@
 import chromadb
 from chromadb.config import Settings
 from typing import List, Dict, Any
-from backend.config import config
-from backend.embeddings import embedding_service
+from backend.config import Config
+from backend.embeddings import EmbeddingService
 
 
 class VectorDatabase:
     """Vector database using ChromaDB for storing and retrieving embeddings"""
 
-    def __init__(self):
+    def __init__(self, config: Config, embedding_service: EmbeddingService):
+        self.config = config
+        self.embedding_service = embedding_service
         self.client = chromadb.PersistentClient(
             path=config.CHROMA_DB_PATH, settings=Settings(anonymized_telemetry=False)
         )
@@ -23,12 +25,12 @@ class VectorDatabase:
         """
         if reset:
             try:
-                self.client.delete_collection(name=config.COLLECTION_NAME)
+                self.client.delete_collection(name=self.config.COLLECTION_NAME)
             except Exception:
                 pass
 
         self.collection = self.client.get_or_create_collection(
-            name=config.COLLECTION_NAME, metadata={"hnsw:space": "cosine"}
+            name=self.config.COLLECTION_NAME, metadata={"hnsw:space": "cosine"}
         )
 
     def add_documents(
@@ -48,7 +50,7 @@ class VectorDatabase:
             raise ValueError("No documents provided")
 
         # Generate embeddings for all documents
-        embeddings = embedding_service.create_embeddings(documents)
+        embeddings = self.embedding_service.create_embeddings(documents)
 
         # Generate IDs for documents
         ids = [f"doc_{i}" for i in range(len(documents))]
@@ -78,10 +80,10 @@ class VectorDatabase:
             self.create_collection()
 
         if n_results is None:
-            n_results = config.TOP_K
+            n_results = self.config.TOP_K
 
         # Generate embedding for query
-        query_embedding = embedding_service.create_embedding(query_text)
+        query_embedding = self.embedding_service.create_embedding(query_text)
 
         # Query the collection
         results = self.collection.query(
@@ -100,6 +102,3 @@ class VectorDatabase:
             "count": self.collection.count(),
             "metadata": self.collection.metadata,
         }
-
-
-vector_db = VectorDatabase()
